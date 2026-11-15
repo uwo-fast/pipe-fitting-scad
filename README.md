@@ -13,7 +13,7 @@ This repository contains a script for modeling a pipe fitting assembly, complete
 ## Dependencies
 
 - OpenSCAD software.
-- [`threadlib`](https://github.com/adrianschlatter/threadlib) by Adrian Schlatter. Use release 0.5. With the code at [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-SCAD/tree/archive/table-3), versions 0.3 and later reproduce the tested fittings and nuts, but which version generated them is not recorded.
+- [`threadlib`](https://github.com/adrianschlatter/threadlib) by Adrian Schlatter. Use release 0.5. With the code at [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-scad/tree/archive/table-3), versions 0.3 and later reproduce the tested fittings and nuts, but which version generated them is not recorded.
 - The three libraries `threadlib` itself needs: [`scad-utils`](https://github.com/openscad/scad-utils), [`list-comprehension-demos`](https://github.com/openscad/list-comprehension-demos) and [`thread_profile.scad`](https://github.com/MisterHW/IoP-satellite/blob/master/OpenSCAD%20bottle%20threads/thread_profile.scad).
 
 ## Installation
@@ -24,11 +24,11 @@ This repository contains a script for modeling a pipe fitting assembly, complete
 
 ```text
 libraries
-├── list-comprehension-demos/
-├── pipe-fitting-SCAD/
-├── scad-utils/
-├── thread_profile.scad
-└── threadlib/
+|-- list-comprehension-demos/
+|-- pipe-fitting-scad/
+|-- scad-utils/
+|-- thread_profile.scad
+`-- threadlib/
 ```
 
 If a library is missing, OpenSCAD can still export a fitting with no threads and report success. Check the console for `Can't open library` warnings, and check that the threads are there before printing.
@@ -74,9 +74,9 @@ These are the highest pressures held for a few minutes by these particular parts
 
 ## Publication Archive
 
-The paper's Data Availability Statement refers to an archived `jmmp` branch. That branch is now the tag [`archive/jmmp`](https://github.com/uwo-fast/pipe-fitting-SCAD/tree/archive/jmmp), at the same commit (`75c1e87`).
+The paper's Data Availability Statement refers to an archived `jmmp` branch. That branch is now the tag [`archive/jmmp`](https://github.com/uwo-fast/pipe-fitting-scad/tree/archive/jmmp), at the same commit (`75c1e87`).
 
-The values in the paper's Table 3 apply to the tag [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-SCAD/tree/archive/table-3) (`7a59d5b`). The two rows Table 3 labels `middle_length` are the `lower_length` and `mid_height` inputs at that tag. Later code replaced those inputs with `middle_length` and `transition_length` and changed what they drive, so Table 3's numbers do not carry over. At the tag, Table 3's values reproduce the OSF fittings, nuts and 20 mm gasket. The OSF 10 mm gasket STL is 1 mm longer than Table 3's value gives.
+The values in the paper's Table 3 apply to the tag [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-scad/tree/archive/table-3) (`7a59d5b`). The two rows Table 3 labels `middle_length` are the `lower_length` and `mid_height` inputs at that tag. Later code replaced those inputs with `middle_length` and `transition_length` and changed what they drive, so Table 3's numbers do not carry over. At the tag, Table 3's values reproduce the OSF fittings, nuts and 20 mm gasket. The OSF 10 mm gasket STL is 1 mm longer than Table 3's value gives.
 
 The `10mm_test` and `20mm_test` presets keep the tested inputs. The current code keeps the fitting's full wall thickness at the threaded tip, where the tested fittings thinned to an edge, so its fittings differ slightly from the tested ones. Use the tag for the exact tested geometry.
 
