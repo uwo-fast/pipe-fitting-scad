@@ -39,7 +39,16 @@ If one of the three libraries `threadlib` needs is missing, OpenSCAD can still e
 
 ### Creating your Fitting
 
-Modify the dimensional variables at the beginning of the pfDesigner.scad script to customize the pipe, gasket, fitting, nuts, and threads.
+Open `pfDesigner.scad` in OpenSCAD and set its parameters, listed in the [docs](docs/README.md), in the Customizer. The Customizer loads the presets in `pfDesigner.json`: `design default values`, `10mm_test` and `20mm_test`.
+
+1. Set `input_dia` to the pipe's outside diameter. The script lists every external thread in `threadlib` whose support diameter is from `input_dia + gasket_thickness_lower / 2` to `input_dia + gasket_thickness_upper / 2`. Widen that range if it finds none.
+2. Set `export` to `false` to show every candidate thread side by side, each with its gasket and labelled `[i]: <thread>`.
+3. The console echoes `SHOWING[i/N]:` and the selected thread, where `N` is the number of candidates. Set `selectedThread` to the `i` you want, from 0 to `N - 1`.
+4. Set `export` to `true` and `selectedPart` to `fitting`, `nut`, `gasket`, `closed_nut`, `flat_gasket` or `all` (the fitting, nut and gasket), then render and export.
+
+The script stops with an error if the selected thread's bore cannot clear the pipe, if `tol_gasket` is not less than `tol_pipe`, or if `gasket_extra_length` is not more than the thread pitch.
+
+[`examples/base_example.scad`](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/examples/base_example.scad) calls the modules in `pipeFitting.scad` from another file, through `use <pipe-fitting-scad/pipeFitting.scad>`, with a fixed thread (`UNC-7/8-ext`). It places the fitting, nut and gasket in their assembled positions, with an optional cross-section.
 
 <img src="docs/designer+output.jpg" alt="Designer Interface and Labelled Output" width="800"/>
 
