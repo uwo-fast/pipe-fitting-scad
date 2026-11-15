@@ -28,6 +28,6 @@ The parameters at the top of `pfDesigner.scad`, with their defaults. Lengths are
 | `entry_chamfer` | true | Chamfers the thread entry on the fitting and nut. |
 | `style` | `"Hexagon"` | Outer shape of the fitting body and nut: `"Hexagon"`, `"Cone"` or `"Circular"`. |
 | `selectedThread` | 5 | Index of the candidate thread to use, from 0 to one less than the number of candidates. |
-| `export` | true | `true` renders only `selectedPart`. `false` shows every candidate thread with its gasket, and the selected fitting, nut and gasket. |
+| `export` | true | `true` renders only `selectedPart`. `false` shows every candidate thread with its gasket, and the selected fitting, nut and gasket, plus `closed_nut` or `flat_gasket` when one of those is selected. |
 | `selectedPart` | `"all"` | `fitting`, `nut`, `gasket`, `closed_nut`, `flat_gasket`, or `all` (fitting, nut and gasket). |
-| `showInputPipe` | false | Shows the pipe for reference. |
+| `showInputPipe` | false | Shows the pipe for reference, when the selected part includes the fitting. |

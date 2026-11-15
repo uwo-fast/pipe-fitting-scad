@@ -1,4 +1,4 @@
-# pipe-fitting-SCAD
+# pipe-fitting-scad
 
 OpenSCAD script for generating pipe fittings parametrically.
 
@@ -31,7 +31,7 @@ libraries
 `-- threadlib/
 ```
 
-If `threadlib` is missing, `pfDesigner.scad` stops at the assertion `No thread has a support diameter from ... mm. Change gasket_thickness_lower or gasket_thickness_upper.` The message points at the gasket thicknesses, but the cause is that OpenSCAD could not find `threadlib`.
+If `threadlib` is missing, `pfDesigner.scad` stops at the assertion `No thread has a support diameter from ... mm. Change gasket_thickness_lower or gasket_thickness_upper.` The message points at the gasket thicknesses, but the cause is that OpenSCAD could not find `threadlib`. `examples/base_example.scad` fails differently without it, reporting that its thread "is too small for this pipe: its bore radius is undef mm".
 
 If one of the three libraries `threadlib` needs is missing, OpenSCAD can still export a fitting with no threads and report success. Check the console for `Can't open library` warnings, and check that the threads are there before printing.
 
