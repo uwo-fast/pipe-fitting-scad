@@ -31,7 +31,9 @@ libraries
 `-- threadlib/
 ```
 
-If a library is missing, OpenSCAD can still export a fitting with no threads and report success. Check the console for `Can't open library` warnings, and check that the threads are there before printing.
+If `threadlib` is missing, `pfDesigner.scad` stops at the assertion `No thread has a support diameter from ... mm. Change gasket_thickness_lower or gasket_thickness_upper.` The message points at the gasket thicknesses, but the cause is that OpenSCAD could not find `threadlib`.
+
+If one of the three libraries `threadlib` needs is missing, OpenSCAD can still export a fitting with no threads and report success. Check the console for `Can't open library` warnings, and check that the threads are there before printing.
 
 ## Usage
 
