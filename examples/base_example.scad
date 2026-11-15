@@ -1,4 +1,4 @@
-use <pipe-fitting-SCAD/pipeFitting.scad>;
+use <pipe-fitting-scad/pipeFitting.scad>;
 use <threadlib/threadlib.scad>;
 
 // ----------------------------

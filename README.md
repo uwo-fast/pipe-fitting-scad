@@ -1,10 +1,10 @@
-# pipe-fitting-SCAD
+# pipe-fitting-scad
 
 OpenSCAD script for generating pipe fittings parametrically.
 
 ## Overview
 
-This repository contains a script for modeling a pipe fitting assembly, complete with gaskets, threaded nuts, and customizable pipe fittings. The script is designed for use in OpenSCAD and offers extensive customization for each component while adhering to existing industry thread standards.
+It generates a pipe coupling: a fitting with an external thread at each end, and for each end a nut and a tapered gasket, which the nut compresses onto the pipe. The threads come from `threadlib`'s thread tables.
 
 **Note:** By using this library, you accept full personal responsibility for its use and any resulting outcomes, and irrevocably agree to the terms outlined in the [legal disclaimer](docs/DISCLAIMER.md). _In short, you are agreeing to assume all risks associated with its use._
 
@@ -13,7 +13,7 @@ This repository contains a script for modeling a pipe fitting assembly, complete
 ## Dependencies
 
 - OpenSCAD software.
-- [`threadlib`](https://github.com/adrianschlatter/threadlib) by Adrian Schlatter. Use release 0.5. With the code at [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-SCAD/tree/archive/table-3), versions 0.3 and later reproduce the tested fittings and nuts, but which version generated them is not recorded.
+- [`threadlib`](https://github.com/adrianschlatter/threadlib), release 0.5. With the code at [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-scad/tree/archive/table-3), versions 0.3 and later reproduce the tested fittings and nuts, but which version generated them is not recorded.
 - The three libraries `threadlib` itself needs: [`scad-utils`](https://github.com/openscad/scad-utils), [`list-comprehension-demos`](https://github.com/openscad/list-comprehension-demos) and [`thread_profile.scad`](https://github.com/MisterHW/IoP-satellite/blob/master/OpenSCAD%20bottle%20threads/thread_profile.scad).
 
 ## Installation
@@ -24,20 +24,31 @@ This repository contains a script for modeling a pipe fitting assembly, complete
 
 ```text
 libraries
-├── list-comprehension-demos/
-├── pipe-fitting-SCAD/
-├── scad-utils/
-├── thread_profile.scad
-└── threadlib/
+|-- list-comprehension-demos/
+|-- pipe-fitting-scad/
+|-- scad-utils/
+|-- thread_profile.scad
+`-- threadlib/
 ```
 
-If a library is missing, OpenSCAD can still export a fitting with no threads and report success. Check the console for `Can't open library` warnings, and check that the threads are there before printing.
+If `threadlib` is missing, `pfDesigner.scad` stops at the assertion `No thread has a support diameter from ... mm. Change gasket_thickness_lower or gasket_thickness_upper.` The message points at the gasket thicknesses, but the cause is that OpenSCAD could not find `threadlib`. `examples/base_example.scad` fails differently without it, reporting that its thread "is too small for this pipe: its bore radius is undef mm".
+
+If one of the three libraries `threadlib` needs is missing, OpenSCAD can still export a fitting with no threads and report success. Check the console for `Can't open library` warnings, and check that the threads are there before printing.
 
 ## Usage
 
 ### Creating your Fitting
 
-Modify the dimensional variables at the beginning of the pfDesigner.scad script to customize the pipe, gasket, fitting, nuts, and threads.
+Open `pfDesigner.scad` in OpenSCAD and set its parameters, listed in the [docs](docs/README.md), in the Customizer. The Customizer loads the presets in `pfDesigner.json`: `design default values`, `10mm_test` and `20mm_test`.
+
+1. Set `input_dia` to the pipe's outside diameter. The script lists every external thread in `threadlib` whose support diameter is from `input_dia + gasket_thickness_lower / 2` to `input_dia + gasket_thickness_upper / 2`. Widen that range if it finds none.
+2. Set `export` to `false` to show every candidate thread side by side, each with its gasket and labelled `[i]: <thread>`.
+3. The console echoes `SHOWING[i/N]:` and the selected thread, where `N` is the number of candidates. Set `selectedThread` to the `i` you want, from 0 to `N - 1`.
+4. Set `export` to `true` and `selectedPart` to `fitting`, `nut`, `gasket`, `closed_nut`, `flat_gasket` or `all` (the fitting, nut and gasket), then render and export.
+
+The script stops with an error if the selected thread's bore cannot clear the pipe, if `tol_gasket` is not less than `tol_pipe`, or if `gasket_extra_length` is not more than the thread pitch.
+
+[`examples/base_example.scad`](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/examples/base_example.scad) calls the modules in `pipeFitting.scad` from another file, through `use <pipe-fitting-scad/pipeFitting.scad>`, with a fixed thread (`UNC-7/8-ext`). It places the fitting, nut and gasket in their assembled positions, with an optional cross-section.
 
 <img src="docs/designer+output.jpg" alt="Designer Interface and Labelled Output" width="800"/>
 
@@ -60,9 +71,9 @@ The paper tested printed couplings with water pressure, raised in steps of 0.345
 | 10 mm, PLA | 2.275 MPa (330 psi) | Highest without cracking: 7.5 Nm |
 | 20 mm, PETG | 2.392 MPa (347 psi) | Reached at 17.5 Nm |
 
-All gaskets were TPE 85 Shore A. The figures were read by hand from an analog gauge with an accuracy of ±0.138 MPa (±20 psi). That is the gauge's accuracy, not the spread between parts. The readings for each test were not kept, so the number of tests behind each figure is not known.
+All gaskets were TPE 85 Shore A. The figures were read by hand from an analog gauge with an accuracy of +/-0.138 MPa (+/-20 psi). That is the gauge's accuracy, not the spread between parts. The readings for each test were not kept, so the number of tests behind each figure is not known.
 
-The far end of each test coupling was closed with a capped nut and a flat 2 mm disc gasket, rather than a second pipe. Set `selectedPart` to `closed_nut` or `flat_gasket` to generate them. The parts used in the tests are on [OSF](https://osf.io/fqjxe/). So each test loaded one tapered gasket sealing on a pipe. Which end leaked was not recorded.
+The far end of each test coupling was closed with a capped nut and a flat 2 mm disc gasket, rather than a second pipe, so each test loaded one tapered gasket sealing on a pipe. Which end leaked was not recorded. Set `selectedPart` to `closed_nut` or `flat_gasket` to generate the capped nut and disc gasket.
 
 These are the highest pressures held for a few minutes by these particular parts. They are not working pressures. The tests did not cover pressure held for long periods, repeated pressure cycles, water temperature, ageing, or repeated assembly. The 20 mm coupling reached about half the pressure of the 10 mm one, so results at one size do not carry over to another. The paper compares 4.551 MPa with a 0.552 MPa residential limit, which is about eight times higher. That ratio is not a safety factor.
 
@@ -72,32 +83,34 @@ These are the highest pressures held for a few minutes by these particular parts
 
 <img src="docs/pipefitting-program-flowchart_paper.jpg" alt="Programming Overview Flowchart" width="600"/>
 
+The paper's flowchart: `pfDesigner.scad` passes the parameters to `pipeFitting.scad`, which builds the parts from the modules in `adaptersMod/`, and the fitting, gasket and cap nut are exported as meshes.
+
 ## Publication Archive
 
-The paper's Data Availability Statement refers to an archived `jmmp` branch. That branch is now the tag [`archive/jmmp`](https://github.com/uwo-fast/pipe-fitting-SCAD/tree/archive/jmmp), at the same commit (`75c1e87`).
+The paper's Data Availability Statement refers to an archived `jmmp` branch. That branch is now the tag [`archive/jmmp`](https://github.com/uwo-fast/pipe-fitting-scad/tree/archive/jmmp), at the same commit (`75c1e87`).
 
-The values in the paper's Table 3 apply to the tag [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-SCAD/tree/archive/table-3) (`7a59d5b`). The two rows Table 3 labels `middle_length` are the `lower_length` and `mid_height` inputs at that tag. Later code replaced those inputs with `middle_length` and `transition_length` and changed what they drive, so Table 3's numbers do not carry over. At the tag, Table 3's values reproduce the OSF fittings, nuts and 20 mm gasket. The OSF 10 mm gasket STL is 1 mm longer than Table 3's value gives.
+The values in the paper's Table 3 apply to the tag [`archive/table-3`](https://github.com/uwo-fast/pipe-fitting-scad/tree/archive/table-3) (`7a59d5b`). The two rows Table 3 labels `middle_length` are the `lower_length` and `mid_height` inputs at that tag. Later code replaced those inputs with `middle_length` and `transition_length` and changed what they drive, so Table 3's numbers do not carry over. At the tag, Table 3's values reproduce the OSF fittings, nuts and 20 mm gasket. The OSF 10 mm gasket STL is 1 mm longer than Table 3's value gives.
 
 The `10mm_test` and `20mm_test` presets keep the tested inputs. The current code keeps the fitting's full wall thickness at the threaded tip, where the tested fittings thinned to an edge, so its fittings differ slightly from the tested ones. Use the tag for the exact tested geometry.
 
-## Contributing & Requests
+## Contributing
 
-Contributions to improve the script or extend its capabilities are welcome. Please submit pull requests with clear descriptions of changes and additions. Similarly, submit an issue to request a fix or addition with a clear description of the bug or feature to be addressed.
+Issues and pull requests are welcome.
 
 ## License
 
 Copyright (C) 2023 Cameron K. Brooks and FAST Lab, Western University.
 
-Licensed under the GNU General Public License, version 3 only (GPL-3.0-only). See the [LICENSE](LICENSE) file.
+Licensed under the GNU General Public License, version 3 only (GPL-3.0-only). See the [LICENSE](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/LICENSE) file.
 
 The files in `adaptersMod/` are adapted from Makrokaba's generator (see below). Its 2020 versions are under the BSD 3-Clause terms kept in those files' headers.
 
 ## Acknowledgement
 
-This was originally created by Cameron Brooks under the auspices of [FAST Research Group](https://www.appropedia.org/FAST) and published in:
+Cameron Brooks originally created this in the [FAST Research Group](https://www.appropedia.org/FAST). It was published in:
 
 Taherzadeh Fini, A.; Brooks, C.K.; Romani, A.; Straatman, A.G.; Pearce, J.M. Parametric Design of Easy-Connect Pipe Fitting Components Using Open-Source CAD and Fabrication Using 3D Printing. _J. Manuf. Mater. Process._ **2025**, _9_, 65. <https://doi.org/10.3390/jmmp9020065>
 
 The design is certified by the Open Source Hardware Association as [CA000069](https://certification.oshwa.org/ca000069.html).
 
-This design uses [threadlib by Adrian Schlatter](https://github.com/adrianschlatter/threadlib) and builds on [Makrokaba's universal thread and pipe joint generator](https://www.thingiverse.com/thing:4323468), which the files in `adaptersMod/` were adapted from.
+This design uses [threadlib by Adrian Schlatter](https://github.com/adrianschlatter/threadlib) and builds on [Makrokaba's universal thread and pipe joint generator](https://www.thingiverse.com/thing:4323468).
