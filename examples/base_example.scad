@@ -76,10 +76,6 @@ module dummy()
 
 $fn = $preview ? 120 * 1 / 4 : 120 * 1;
 
-// correction factor for circle subtraction to avoid undersized holes
-fudge = 1 / cos(180 / $fn);
-corrector = 0.15;
-
 lower_length = middle_length / 2;
 mid_height = transition_length / 2;
 
@@ -102,7 +98,7 @@ if ((selectedPart == "fitting" || selectedPart == "all"))
 {
 
     color("green") xSection(showXSection)
-        generateFitting(corrector = corrector, thread_type = thread_type_select, input_dia = input_dia, turns = turns,
+        generateFitting(thread_type = thread_type_select, input_dia = input_dia, turns = turns,
                         wall_thickness = wall_thickness, tol_pipe = tol_pipe, entry_chamfer = entry_chamfer,
                         style = style, mid_height = mid_height, lower_length = lower_length);
 
@@ -119,16 +115,16 @@ if ((selectedPart == "nut" || selectedPart == "all"))
 {
     translate([ 0, 0.05, thread_height + cap_thickness / 2 + lower_length + mid_height * 2 ]) rotate([ 0, 180, 0 ])
         color("blue") xSection(showXSection) rotate([ 0, 0, 180 ])
-            generateNut(corrector = corrector, thread_type = thread_type_select, turns = turns,
+            generateNut(thread_type = thread_type_select, turns = turns,
                         wall_thickness = nut_wall_thickness, entry_chamfer = entry_chamfer, style = style,
-                        cap_thickness = cap_thickness, input_dia = input_dia, tol_pipe = tol_pipe, fudge = fudge);
+                        cap_thickness = cap_thickness, input_dia = input_dia, tol_pipe = tol_pipe);
 }
 
 if ((selectedPart == "gasket" || selectedPart == "all"))
 {
     translate([ 0, -0.05, lower_length + mid_height ]) color("orange") xSection(showXSection)
-        generateGasket(corrector = corrector, designator = thread_type_select, mid_height = mid_height,
-                       wall_thickness = wall_thickness, fudge = fudge, turns = turns, input_dia = input_dia,
+        generateGasket(designator = thread_type_select, mid_height = mid_height,
+                       wall_thickness = wall_thickness, turns = turns, input_dia = input_dia,
                        fit_excess = gasket_extra_length, tol_gasket = tol_gasket, tol_pipe = tol_pipe);
 }
 
