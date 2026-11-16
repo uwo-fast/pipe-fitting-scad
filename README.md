@@ -48,7 +48,7 @@ Open `pfDesigner.scad` in OpenSCAD and set its parameters, listed in the [docs](
 
 The script stops with an error if the selected thread's bore cannot clear the pipe, if `tol_gasket` is not less than `tol_pipe`, or if `gasket_extra_length` is not more than the thread pitch.
 
-[`examples/base_example.scad`](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/examples/base_example.scad) calls the modules in `pipeFitting.scad` from another file, through `use <pipe-fitting-scad/pipeFitting.scad>`, with a fixed thread (`UNC-7/8-ext`). It places the fitting, nut and gasket in their assembled positions, with an optional cross-section.
+[`examples/base_example.scad`](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/examples/base_example.scad) calls `generateFitting`, `generateNut`, and `generateGasket` with only `thread_type` and `input_dia`. The other arguments default to the **design default values** preset and can be overridden by name. The example places the parts in their assembled positions using those dimensions and can display a cross-section.
 
 <img src="docs/designer+output.jpg" alt="Designer Interface and Labelled Output" width="800"/>
 

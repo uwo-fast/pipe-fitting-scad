@@ -60,14 +60,20 @@ module check_fitting(thread_type, input_dia, wall_thickness, tol_pipe, tol_gaske
                pitch, " mm), or the nut seats without compressing the gasket"));
 }
 
+// Correction for undersized holes when the circle is approximated by a polygon.
+// The design preset uses 30 fragments in preview and 120 in render.
+function _pipe_fitting_fudge() = 1 / cos(180 / ($fn >= 3 ? $fn : ($preview ? 30 : 120)));
+
 // generateGasket module to create a gasket for the pipe fitting
-module generateGasket(corrector, designator, mid_height, wall_thickness, fudge, turns, input_dia, fit_excess,
-                      tol_gasket, tol_pipe, z_fite = 0.05)
+// designator is retained for callers that use the original argument.
+module generateGasket(corrector = 0.15, designator, mid_height = 15 / 2, wall_thickness = 1.2,
+                      fudge = _pipe_fitting_fudge(), turns = 5, input_dia, fit_excess = 3, tol_gasket = 0.1,
+                      tol_pipe = 0.2, z_fite = 0.05, thread_type)
 {
     // adapter generation uses external diameter, this maps to the inner diameter
     lower_outer_to_inner_corr = input_dia + wall_thickness * 2 + tol_pipe * 2;
 
-    specs = thread_specs(designator);
+    specs = thread_specs(is_undef(thread_type) ? designator : thread_type);
     pitch = specs[0];
     Dsupport = specs[2];
 
@@ -86,8 +92,9 @@ module generateGasket(corrector, designator, mid_height, wall_thickness, fudge, 
 }
 
 // generateFitting module to create the pipe fitting
-module generateFitting(corrector, thread_type, input_dia, turns, wall_thickness, tol_pipe, entry_chamfer, style,
-                       mid_outer_diameter = 0, mid_height, lower_length)
+module generateFitting(corrector = 0.15, thread_type, input_dia, turns = 5, wall_thickness = 1.2, tol_pipe = 0.2,
+                       entry_chamfer = true, style = "Hexagon", mid_outer_diameter = 0, mid_height = 15 / 2,
+                       lower_length = 20 / 2)
 {
     // adapter generation uses external diameter, this maps to the inner diameter
     lower_outer_to_inner_corr = input_dia + wall_thickness * 2 + tol_pipe * 2;
@@ -106,8 +113,9 @@ module generateFitting(corrector, thread_type, input_dia, turns, wall_thickness,
 
 // generateNut module to create the nut for the pipe fitting
 // closed = true leaves the cap solid, to seal the far end of a test assembly
-module generateNut(corrector, thread_type, turns, wall_thickness, entry_chamfer, style, cap_diameter = 0, cap_thickness,
-                   z_fite = 0.05, input_dia, tol_pipe, fudge, closed = false)
+module generateNut(corrector = 0.15, thread_type, turns = 5, wall_thickness = 2.4, entry_chamfer = true,
+                   style = "Hexagon", cap_diameter = 0, cap_thickness = 1, z_fite = 0.05, input_dia, tol_pipe = 0.2,
+                   fudge = _pipe_fitting_fudge(), closed = false)
 {
     {
         difference()
