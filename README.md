@@ -101,7 +101,7 @@ Issues and pull requests are welcome.
 
 Copyright (C) 2023-2024 Cameron K. Brooks and FAST Lab, Western University.
 
-Licensed under the GNU General Public License, version 3 only (GPL-3.0-only). See the [LICENSE](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/LICENSE) file.
+Licensed under the GNU General Public License, version 3 only (GPL-3.0-only). See the [LICENSE](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/LICENSE) file, and [LICENSING.md](LICENSING.md) for what applies where and why.
 
 The files in `adaptersMod/` are adapted from Makrokaba's generator (see below). Its 2020 versions are under the BSD 3-Clause terms kept in those files' headers.
 
