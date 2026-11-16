@@ -72,8 +72,6 @@ showInputPipe = false; // show the input pipe(s) for reference
 
 // full circle has 120 fragments
 $fn = $preview ? 120 * 1 / 4 : 120 * 1;
-// correction factor for circle subtraction to avoid undersized holes
-fudge = 1 / cos(180 / $fn);
 corrector = 0.15;
 
 lower_length = middle_length / 2;
@@ -126,7 +124,7 @@ if (!export)
                 color(c = "blue", alpha = 0.1) translate([ 0, 0, -input_dia * 5 ])
                     cylinder(h = input_dia * 10, d = input_dia);
                 generateGasket(designator = designators[i], mid_height = mid_height, wall_thickness = wall_thickness,
-                               fudge = fudge, turns = turns, input_dia = input_dia, fit_excess = gasket_extra_length,
+                               turns = turns, input_dia = input_dia, fit_excess = gasket_extra_length,
                                tol_gasket = tol_gasket, tol_pipe = tol_pipe);
             }
         }
@@ -167,14 +165,14 @@ if (!export || (selectedPart == "nut" || selectedPart == "all"))
     translate([ -thread_specs(thread_type_select)[2], -thread_specs(thread_type_select)[2], 0 ])
         generateNut(corrector = corrector, thread_type = thread_type_select, turns = turns,
                     wall_thickness = nut_wall_thickness, entry_chamfer = entry_chamfer, style = style,
-                    cap_thickness = cap_thickness, input_dia = input_dia, tol_pipe = tol_pipe, fudge = fudge);
+                    cap_thickness = cap_thickness, input_dia = input_dia, tol_pipe = tol_pipe);
 }
 
 if (!export || (selectedPart == "gasket" || selectedPart == "all"))
 {
     translate([ thread_specs(thread_type_select)[2], -thread_specs(thread_type_select)[2], 0 ])
         generateGasket(corrector = corrector, designator = thread_type_select, mid_height = mid_height,
-                       wall_thickness = wall_thickness, fudge = fudge, turns = turns, input_dia = input_dia,
+                       wall_thickness = wall_thickness, turns = turns, input_dia = input_dia,
                        fit_excess = gasket_extra_length, tol_gasket = tol_gasket, tol_pipe = tol_pipe);
 }
 
@@ -182,7 +180,7 @@ if (selectedPart == "closed_nut")
 {
     generateNut(corrector = corrector, thread_type = thread_type_select, turns = turns,
                 wall_thickness = nut_wall_thickness, entry_chamfer = entry_chamfer, style = style,
-                cap_thickness = cap_thickness, input_dia = input_dia, tol_pipe = tol_pipe, fudge = fudge, closed = true);
+                cap_thickness = cap_thickness, input_dia = input_dia, tol_pipe = tol_pipe, closed = true);
 }
 
 if (selectedPart == "flat_gasket")
