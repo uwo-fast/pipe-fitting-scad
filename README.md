@@ -99,7 +99,7 @@ Issues and pull requests are welcome.
 
 ## License
 
-Copyright (C) 2023 Cameron K. Brooks and FAST Lab, Western University.
+Copyright (C) 2023-2024 Cameron K. Brooks and FAST Lab, Western University.
 
 Licensed under the GNU General Public License, version 3 only (GPL-3.0-only). See the [LICENSE](https://github.com/uwo-fast/pipe-fitting-scad/blob/main/LICENSE) file.
 
